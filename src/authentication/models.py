@@ -10,6 +10,32 @@ from .managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
+    """
+    CustomUser model representing a user in the system.
+    
+    Attributes:
+        - email (EmailField): The email address of the user.
+        - birth_date (DateField): The birth date of the user.
+        - about_me (TextField): A short description about the user.
+        - document_number (CharField): The document number of the user.
+        - phone_number (PhoneNumberField): The phone number of the user.
+    
+    Attributes inherits from AbstractUser:
+        - username (CharField): The username of the user.
+        - first_name (CharField): The first name of the user.
+        - last_name (CharField): The last name of the user.
+        - is_staff (BooleanField): Designates whether the user can access the admin site.
+        - is_active (BooleanField): Designates whether the user account is active.
+        - date_joined (DateTimeField): The date and time when the user account was created.
+        
+    Custom Manager:
+        - objects (CustomUserManager): Custom manager for the CustomUser model.
+    
+    Methods:
+        - __str__: Returns a string representation of the user.
+        - clean: Validates the document number and birth date of the user.
+        - save: Overrides the save method to set the username as 'first_name last_name' when saving the user.
+    """
     email = models.EmailField(verbose_name='Email', unique=True)
     birth_date = models.DateField(verbose_name='Fecha de nacimiento')
     about_me = models.TextField(max_length=500, blank=True, verbose_name='Descripcion')
