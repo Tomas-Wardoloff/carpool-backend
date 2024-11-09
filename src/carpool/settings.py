@@ -45,6 +45,7 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     'authentication.apps.AuthenticationConfig',
+    'trip.apps.TripConfig',
 ]
 
 THIRD_PARTY_APPS = [
