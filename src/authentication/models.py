@@ -65,3 +65,9 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         self.username = f"{self.first_name} {self.last_name}" # auto assign username
         super().save(*args, **kwargs)
+    
+    def get_user_rating(self) -> float | str:
+        reviews = self.review.all()
+        if len(reviews) > 20:
+            return round(sum([review.rating for review in reviews]) / len(reviews), 1)
+        return 'Este usuario no tiene suficientes calificaciones'
