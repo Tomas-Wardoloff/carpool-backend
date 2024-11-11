@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - actions # test on actions branch
+      - dev
   pull_request:
     branches:
       - main
