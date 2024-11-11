@@ -26,9 +26,8 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt 
             
-            - name: Set environment variables
-              run: echo "Environment variables are set" 
-              env: 
+            - name: Run tests
+              env:
                 SECRET_KEY: ${{ secrets.SECRET_KEY }}
                 DEBUG: ${{ secrets.DEBUG }}
                 DB_NAME: ${{ secrets.DB_NAME }}
@@ -36,7 +35,6 @@ jobs:
                 DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                 DB_HOST: ${{ secrets.DB_HOST }}
                 DB_PORT: ${{ secrets.DB_PORT }}
-            
-            - name: Run tests
-              working-directory: ./src
-              run: python manage.py test
+              run: |
+                cd src
+                python manage.py test
