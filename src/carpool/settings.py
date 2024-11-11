@@ -47,6 +47,7 @@ LOCAL_APPS = [
     'trip.apps.TripConfig',
     'review.apps.ReviewConfig',
     'authentication.apps.AuthenticationConfig',
+    'api.apps.ApiConfig',
 ]
 
 THIRD_PARTY_APPS = [
