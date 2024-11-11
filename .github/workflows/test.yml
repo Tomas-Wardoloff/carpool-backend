@@ -27,6 +27,7 @@ jobs:
                 pip install -r requirements.txt 
             
             - name: Set environment variables
+              run: echo "Environment variables are set" 
               env: 
                 SECRET_KEY: ${{ secrets.SECRET_KEY }}
                 DEBUG: ${{ secrets.DEBUG }}
@@ -35,7 +36,7 @@ jobs:
                 DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                 DB_HOST: ${{ secrets.DB_HOST }}
                 DB_PORT: ${{ secrets.DB_PORT }}
-              run: cd src
             
             - name: Run tests
+              working-directory: ./src
               run: python manage.py test
