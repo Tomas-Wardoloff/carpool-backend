@@ -6,6 +6,28 @@ from django.core.exceptions import ValidationError
 from authentication.models import CustomUser
 
 
+class State(models.Model):
+    """
+    State model representing a state in the system.
+    
+    Attributes:
+        - name (CharField): The name of the state.
+        - abbreviation (CharField): The abbreviation of the state.
+        - country (CharField): The country of the state.
+    
+    Attributes inherits from Model:
+        - id (AutoField): The primary key for the state.
+        
+    Methods:
+        - __str__: Returns a string representation of the state.
+    """
+    name = models.CharField(max_length=100, verbose_name="Nombre")
+    abbreviation = models.CharField(max_length=2, verbose_name="Abreviatura")
+    country = models.CharField(max_length=100, verbose_name="País")
+    
+    def __str__(self):
+        return f"{self.name}, {self.country}"
+
 class City(models.Model):
     """
     City model representing a city in the system.
@@ -26,7 +48,7 @@ class City(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nombre')
     latitude = models.FloatField(verbose_name='Latitud')
     longitude = models.FloatField(verbose_name='Longitud')
-    state = models.CharField(max_length=100, verbose_name='Provincia')
+    state = models.ForeignKey(State, related_name='cities', on_delete=models.CASCADE, verbose_name='Provincia')
     
     def clean(self):
         pass
