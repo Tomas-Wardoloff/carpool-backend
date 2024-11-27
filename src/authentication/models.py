@@ -22,11 +22,14 @@ class CustomUser(AbstractUser):
     
     Attributes inherits from AbstractUser:
         - username (CharField): The username of the user.
+        - password (CharField): The password of the user.
         - first_name (CharField): The first name of the user.
         - last_name (CharField): The last name of the user.
+        - is_superuser (BooleanField): Designates whether the user has all permissions without explicitly assigning them.
         - is_staff (BooleanField): Designates whether the user can access the admin site.
         - is_active (BooleanField): Designates whether the user account is active.
         - date_joined (DateTimeField): The date and time when the user account was created.
+        - last_login (DateTimeField): The date and time when the user last logged in.
         
     Custom Manager:
         - objects (CustomUserManager): Custom manager for the CustomUser model.
@@ -63,6 +66,8 @@ class CustomUser(AbstractUser):
             raise ValidationError('Fecha de nacimiento inválida.')
     
     def save(self, *args, **kwargs):
+        self.first_name = self.first_name.capitalize()
+        self.last_name = self.last_name.capitalize()
         self.username = f"{self.first_name} {self.last_name}" # auto assign username
         super().save(*args, **kwargs)
     
