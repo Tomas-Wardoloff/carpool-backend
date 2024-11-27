@@ -8,6 +8,7 @@ from authentication.models import CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     """
     Class to serialize and deserialize CustomUser instances.
+    Exclude fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups''
     
     Meta:
         model (CustomUser): The model that this serializer is associated with.
