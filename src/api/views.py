@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from authentication.models import CustomUser
-from trip.models import State
-from .serializers import CustomUserSerializer, StateSerializer
+from trip.models import State, City
+from .serializers import CustomUserSerializer, StateSerializer, CitySerializer
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -42,5 +42,18 @@ class StateViewSet(viewsets.ReadOnlyModelViewSet):
     
     queryset = State.objects.all()
     serializer_class = StateSerializer
+    permission_classes = [IsAuthenticated]
+    
+    
+class CityViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for viewing City instances.
+    
+    This viewset provides `list` and `retrieve` actions.
+    All actions require authentication
+    The cities can only be created by an admin users outside the API.
+    """
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
     permission_classes = [IsAuthenticated]
     

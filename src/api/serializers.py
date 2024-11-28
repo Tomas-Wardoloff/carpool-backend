@@ -3,18 +3,13 @@ from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from authentication.models import CustomUser
-from trip.models import State
+from trip.models import State, City
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """
     Class to serialize and deserialize CustomUser instances.
-    Excluded fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups''
-    
-    Meta:
-        model (CustomUser): The model that this serializer is associated with.
-        fields (list): The list of fields to include in the serialized representation.
-        read_only_fields (list): The list of fields that are read-only.
+    Excluded fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups'
 
     Methods:
         create(validated_data):
@@ -50,14 +45,21 @@ class StateSerializer(serializers.ModelSerializer):
     """
     Class to serialize and deserialize State instances.
     No excluded fields.
-    
-    Meta:
-        model (State): The model that this serializer is associated with.
-        fields (list): The list of fields to include in the serialized representation.
-        read_only_fields (list): The list of fields that are read-only.
     """
     class Meta:
         model = State
         fields = ['id', 'name', 'abbreviation', 'country']
         read_only_fields = ['id']  
+    
         
+class CitySerializer(serializers.ModelSerializer):
+    """
+    Class to serialize and deserialize City instances.
+    No excluded fields.
+    """
+    state = StateSerializer()
+    
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'latitude', 'longitude', 'state']
+        read_only_fields = ['id']
