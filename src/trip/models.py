@@ -1,3 +1,5 @@
+import re
+
 from datetime import timedelta, datetime
 
 from django.db import models
@@ -80,8 +82,8 @@ class Vehicle(models.Model):
     model = models.CharField(max_length=50, verbose_name='Modelo')
     
     def clean(self):
-        if len(self.license_plate) not in (6, 7):
-            raise ValidationError('Patente invalida') # check if the license plate has 6 or 7 characters before save, FORMAT: ABC123 or AB123CD
+        if not re.match(r'^(?:[A-Z]{3}\d{3}|[A-Z]{2}\d{3}[A-Z]{2})$', self.license_plate):
+            raise ValidationError('Patente invalida') # check if the license plate FORMAT: ABC123 or AB123CD before save
         if self.owner.vehicles.license_plate == self.license_plate:
             raise ValidationError('El usuario ya cuenta con un vehículo registrado con esa patente') # check if the user already has a vehicle with the same license plate before save
     
