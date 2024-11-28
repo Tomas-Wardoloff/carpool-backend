@@ -3,12 +3,13 @@ from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from authentication.models import CustomUser
+from trip.models import State
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """
     Class to serialize and deserialize CustomUser instances.
-    Exclude fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups''
+    Excluded fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups''
     
     Meta:
         model (CustomUser): The model that this serializer is associated with.
@@ -43,4 +44,20 @@ class CustomUserSerializer(serializers.ModelSerializer):
             password = validated_data.pop('password')
             instance.set_password(password)
         return super().update(instance, validated_data)
+
+
+class StateSerializer(serializers.ModelSerializer):
+    """
+    Class to serialize and deserialize State instances.
+    No excluded fields.
+    
+    Meta:
+        model (State): The model that this serializer is associated with.
+        fields (list): The list of fields to include in the serialized representation.
+        read_only_fields (list): The list of fields that are read-only.
+    """
+    class Meta:
+        model = State
+        fields = ['id', 'name', 'abbreviation', 'country']
+        read_only_fields = ['id']  
         

@@ -3,7 +3,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from authentication.models import CustomUser
-from .serializers import CustomUserSerializer
+from trip.models import State
+from .serializers import CustomUserSerializer, StateSerializer
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -28,3 +29,18 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         else: 
             self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
+    
+
+class StateViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for viewing State instances.
+    
+    This viewset provides `list` and `retrieve` actions.
+    All actions require authentication
+    The states can only be created by an admin users outside the API.
+    """
+    
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    permission_classes = [IsAuthenticated]
+    
