@@ -44,7 +44,7 @@ class CreateCustomUserSerializer(serializers.ModelSerializer):
 class ListCustomUserSerializer(serializers.ModelSerializer):
     """
     This serializer handles the serialization of CustomUser instances for the list action,
-    including only the 'id' field to avoid exposing sensitive data.
+    including only the 'id', 'email', 'first_name' and 'last_name' field to avoid exposing sensitive data.
     """
     class Meta:
         model = CustomUser
