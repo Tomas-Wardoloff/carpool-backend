@@ -30,6 +30,7 @@ class State(models.Model):
     def __str__(self):
         return f"{self.name}, {self.country}"
 
+
 class City(models.Model):
     """
     City model representing a city in the system.
@@ -100,6 +101,9 @@ class Trip(models.Model):
         - destination_city (ForeignKey): The destination city of the trip.
         - departure_date (DateField): The departure date of the trip.
         - departure_time (TimeField): The departure time of the trip.
+        - pet_allowed (BooleanField): Indicates if pets are allowed in the trip.
+        - smoking_allowed (BooleanField): Indicates if smoking is allowed in the trip.
+        - kids_allowed (BooleanField): Indicates if kids are allowed in the trip.
         - vehicle (ForeignKey): The vehicle of the trip.
         - participants (ManyToManyField): The participants of the trip.
     
@@ -114,6 +118,9 @@ class Trip(models.Model):
     destination_city = models.ForeignKey(City, related_name='trips_to', on_delete=models.CASCADE, verbose_name='Ciudad de destino') 
     departure_date = models.DateField(verbose_name='Fecha de salida')
     departure_time = models.TimeField(verbose_name='Hora de salida')
+    pet_allowed = models.BooleanField(default=False, verbose_name='Se permiten mascotas')
+    smoking_allowed = models.BooleanField(default=False, verbose_name='Se permite fumar')
+    kids_allowed = models.BooleanField(default=False, verbose_name='Se permiten niños')
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, verbose_name='Vehículo')
     participants = models.ManyToManyField(CustomUser, related_name='trips', through='TripParticipant', verbose_name='Participantes')
 
