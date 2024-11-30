@@ -3,7 +3,7 @@ from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from authentication.models import CustomUser
-from trip.models import State, City
+from trip.models import State, City, Vehicle
 
 
 class CreateCustomUserSerializer(serializers.ModelSerializer):
@@ -72,7 +72,7 @@ class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = State
         fields = ['id', 'name', 'abbreviation']
-        read_only_fields = ['id']  
+        read_only_fields = ['id', 'name', 'abbreviation']  
     
         
 class CitySerializer(serializers.ModelSerializer):
@@ -85,4 +85,16 @@ class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = ['id', 'name', 'latitude', 'longitude', 'state']
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'name', 'latitude', 'longitude', 'state']
+
+
+class VehicleSerializer(serializers.ModelSerializer):
+    """
+    Class to serialize and deserialize Vehicle instances.
+    Excluded fields: 'owner'.
+    """
+    class Meta:
+        model = Vehicle
+        fields = ['id', 'license_plate', 'brand', 'model']
+        read_only_fields = ['id', 'owner']
+        

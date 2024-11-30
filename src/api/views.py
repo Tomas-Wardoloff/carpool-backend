@@ -10,7 +10,6 @@ from .serializers import (
     DetailCustomUserSerializer,
     StateSerializer,
     CitySerializer,
-    VehicleSerializer,
 )
 
 
