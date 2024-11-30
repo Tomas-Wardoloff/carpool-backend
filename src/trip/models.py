@@ -85,7 +85,7 @@ class Vehicle(models.Model):
     def clean(self):
         if not re.match(r'^(?:[A-Z]{3}\d{3}|[A-Z]{2}\d{3}[A-Z]{2})$', self.license_plate):
             raise ValidationError('Patente invalida') # check if the license plate FORMAT: ABC123 or AB123CD before save
-        if self.owner.vehicles.license_plate == self.license_plate:
+        if Vehicle.objects.filter(owner=self.owner, license_plate=self.license_plate).exists():
             raise ValidationError('El usuario ya cuenta con un vehículo registrado con esa patente') # check if the user already has a vehicle with the same license plate before save
     
     def __str__(self):
