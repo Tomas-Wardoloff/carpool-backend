@@ -6,10 +6,10 @@ from authentication.models import CustomUser
 from trip.models import State, City
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CreateCustomUserSerializer(serializers.ModelSerializer):
     """
-    Class to serialize and deserialize CustomUser instances.
-    Excluded fields: 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'last_login', 'groups'
+    This serializer handles the serialization of CustomUser instances for the create and update actions,
+    including all fields except for the django default fields.
 
     Methods:
         create(validated_data):
@@ -39,16 +39,39 @@ class CustomUserSerializer(serializers.ModelSerializer):
             password = validated_data.pop('password')
             instance.set_password(password)
         return super().update(instance, validated_data)
+    
+
+class ListCustomUserSerializer(serializers.ModelSerializer):
+    """
+    This serializer handles the serialization of CustomUser instances for the list action,
+    including only the 'id' field to avoid exposing sensitive data.
+    """
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'first_name', 'last_name']
+        read_only_fields = ['id', 'email', 'first_name', 'last_name']
+
+
+class DetailCustomUserSerializer(serializers.ModelSerializer):
+    """
+    This serializer handles the serialization of CustomUser instances for the retrieve action,
+    including detailed fields but excluding sensitive data.
+    """
+    phone_number = PhoneNumberField(region='AR')   
+    
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'birth_date', 'about_me', 'document_number', 'phone_number']
 
 
 class StateSerializer(serializers.ModelSerializer):
     """
     Class to serialize and deserialize State instances.
-    No excluded fields.
+    Excluded fields: 'country'.
     """
     class Meta:
         model = State
-        fields = ['id', 'name', 'abbreviation', 'country']
+        fields = ['id', 'name', 'abbreviation']
         read_only_fields = ['id']  
     
         
