@@ -40,10 +40,11 @@ class CustomUser(AbstractUser):
         - save: Overrides the save method to set the username as 'first_name last_name' when saving the user.
     """
     email = models.EmailField(verbose_name='Email', unique=True)
-    birth_date = models.DateField(verbose_name='Fecha de nacimiento')
+    birth_date = models.DateField(verbose_name='Fecha de nacimiento', blank=True, null=True)
     about_me = models.TextField(max_length=500, blank=True, verbose_name='Descripcion')
     document_number = models.CharField(max_length=8, verbose_name='Número de documento')
     phone_number = PhoneNumberField(region='AR', verbose_name='Número de teléfono')
+    username = models.CharField(max_length=150, unique=False, blank=True, null=True)
     # profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     
     USERNAME_FIELD = 'email'
