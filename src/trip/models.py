@@ -140,4 +140,36 @@ class TripParticipant(models.Model):
     
     class Meta:
         unique_together = ('user', 'trip')
+        
+
+class TripJoinRequest(models.Model):
+    """
+    TripJoinRequest model representing a request to join a trip.
     
+    Attributes:
+        - user (ForeignKey): The user of the request.
+        - trip (ForeignKey): The trip of the request.
+        - created_at (DateTimeField): The creation date of the request.
+        - updated_at (DateTimeField): The update date of the request.
+        - status (CharField): The status of the request.
+    
+    Attributes inherits from Model:
+        - id (AutoField): The primary key for the request.
+        
+    Methods:
+        - __str__: Returns a string representation of the request.
+    
+    Meta:
+        - unique_together: The user and trip of the request must be unique together.
+    """
+    user = models.ForeignKey(CustomUser, related_name='join_requests', on_delete=models.CASCADE, verbose_name='Usuario')
+    trip = models.ForeignKey(Trip, related_name='join_requests', on_delete=models.CASCADE, verbose_name='Viaje')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
+    status = models.CharField(max_length=10, choices=[('pending', 'Pending'),('accepted', 'Accepted'),('rejected', 'Rejected')], verbose_name='Estado', default='pending')
+    
+    def __str__(self):
+        return f"{self.user.email} request to join trip {self.trip}"
+    
+    class Meta:
+        unique_together = ('user', 'trip')
