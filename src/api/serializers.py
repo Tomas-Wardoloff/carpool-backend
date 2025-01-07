@@ -25,8 +25,14 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'birth_date', 'about_me', 'document_number', 'phone_number']
+        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'birth_date', 'about_me', 'document_number', 'phone_number', 'profile_picture']
         read_only_fields = ['id']
+        
+    def validate_profile_picture(self, value):
+        pass
+        #file_size = value.size
+        #if file_size > 2*1024*1024:
+        #    raise serializers.ValidationError('La imagen no puede superar los 2MB')
         
     def create(self, validated_data):
         password = validated_data.pop('password')

@@ -37,8 +37,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             self.permission_classes = [AllowAny]
-        else:
-            self.permission_classes = [IsAuthenticated]
+        #else:
+        #    self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
 
     def get_queryset(self):

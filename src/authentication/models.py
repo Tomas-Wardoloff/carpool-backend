@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
         - about_me (TextField): A short description about the user.
         - document_number (CharField): The document number of the user.
         - phone_number (PhoneNumberField): The phone number of the user.
+        - profile_picture (ImageField): The profile picture of the user.
     
     Attributes inherits from AbstractUser:
         - username (CharField): The username of the user.
@@ -45,7 +46,7 @@ class CustomUser(AbstractUser):
     document_number = models.CharField(max_length=8, verbose_name='Número de documento')
     phone_number = PhoneNumberField(region='AR', verbose_name='Número de teléfono')
     username = models.CharField(max_length=150, unique=False, blank=True, null=True)
-    # profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -56,20 +57,23 @@ class CustomUser(AbstractUser):
         return self.email
     
     def clean(self):
-        super.clean()
+        super().clean()
         
-        if len(self.document_number) != 8 or int(self.document_number) <= 0 or not self.document_number.isdigit():
-            raise ValidationError('Número de documento inválido.')
-
-        if self.birth_date.year - datetime.today.year < 18:
-            raise ValidationError('Los usuarios deben ser mayores de 18 años.')
-        if self.birth_date.year - datetime.today.year > 100:
-            raise ValidationError('Fecha de nacimiento inválida.')
+        #if len(self.document_number) != 8 or int(self.document_number) <= 0 or not self.document_number.isdigit():
+        #    raise ValidationError('Número de documento inválido.')
+        
+        #if self.birth_date.year - datetime.today.year < 18:
+        #    raise ValidationError('Los usuarios deben ser mayores de 18 años.')
+        #if self.birth_date.year - datetime.today.year > 100:
+        #    raise ValidationError('Fecha de nacimiento inválida.')
     
     def save(self, *args, **kwargs):
         self.first_name = self.first_name.capitalize()
         self.last_name = self.last_name.capitalize()
         self.username = f"{self.first_name} {self.last_name}" # auto assign username
+        
+        if self.profile_picture:
+            self.profile_picture.name = f"{self.email}_profile_picture.{self.profile_picture.name.split('.')[-1]}"
         super().save(*args, **kwargs)
     
     def get_user_rating(self) -> float | str:
