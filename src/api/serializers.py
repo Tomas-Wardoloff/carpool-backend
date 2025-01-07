@@ -15,6 +15,9 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
     including all fields except for the django default fields.
 
     Methods:
+        validate_profile_picture(value):
+            Ensures the profile picture does not exceed 5MB.
+    
         create(validated_data):
             Ensures the password is hashed before saving.
 
@@ -29,10 +32,9 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
         
     def validate_profile_picture(self, value):
-        pass
-        #file_size = value.size
-        #if file_size > 2*1024*1024:
-        #    raise serializers.ValidationError('La imagen no puede superar los 2MB')
+        file_size = value.size
+        if file_size > 5*1024*1024:
+            raise serializers.ValidationError('La imagen no puede superar los 2MB')
         
     def create(self, validated_data):
         password = validated_data.pop('password')
