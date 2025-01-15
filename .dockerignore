@@ -1,0 +1,16 @@
+# Enviroments
+venv/
+.env
+
+# Git and GitHub files
+.github/
+.git/
+.gitignore
+
+# VScode config
+.vscode/
+
+# Docs
+docs/
+README.md
+LICENSE
