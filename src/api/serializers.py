@@ -6,7 +6,7 @@ from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from authentication.models import CustomUser
-from trip.models import State, City, Vehicle, Trip, TripParticipant
+from trip.models import State, City, Vehicle, Trip, TripParticipant, TripJoinRequest
 
 
 class CustomUserCreateSerializer(serializers.ModelSerializer):
@@ -228,3 +228,32 @@ class TripListSerializer(serializers.ModelSerializer):
         model = Trip
         fields = ['id', 'origin_city', 'destination_city', 'departure_date', 'departure_time', 'pet_allowed', 'smoking_allowed', 'kids_allowed', 'vehicle', 'participants']
         read_only_fields = ['id', 'origin_city', 'detination_city', 'departure_date', 'departure_time', 'pet_allowed', 'smoking_allowed', 'kids_allowed', 'vehicle', 'participants']
+
+
+class TripJoinRequestSerializer(serializers.ModelSerializer):
+    """
+    Seriliazer class for creating and updating TripJoinRequest instances.
+    """
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
+    
+    class Meta:
+        model = TripJoinRequest
+        fields = ['id', 'user', 'trip', 'status']
+        read_only_fields = ['id']
+        
+    def validate_status(self, value):
+        if value not in ('pending', 'accepted', 'rejected'):
+            raise serializers.ValidationError('El estado especificado es invalido')
+        return value
+    
+    def validate(self, data):
+        user = data.get('user')
+        trip = data.get('trip')
+        
+        if TripJoinRequest.objects.filter(user=user, trip=trip).exists():
+            raise serializers.ValidationError('Ya existe una solicitud de unión para dicho viaje')
+        if trip.creator == user:
+            raise serializers.ValidationError('El creador del viaje no puede solicitar unirse a su propio viaje')
+        return data
+    

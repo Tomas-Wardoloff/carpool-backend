@@ -3,7 +3,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from authentication.models import CustomUser
-from trip.models import State, City, Trip, TripParticipant, Vehicle
+from trip.models import State, City, Trip, TripParticipant, Vehicle, TripJoinRequest
 from .serializers import (
     CustomUserCreateSerializer,
     CustomUserDetailSerializer,
@@ -16,6 +16,7 @@ from .serializers import (
     TripParticipantListSerializer,
     TripDetailSerializer,
     TripListSerializer,
+    TripJoinRequestSerializer
 )
 
 
@@ -123,14 +124,15 @@ class TripParticipantViewSet(viewsets.ModelViewSet):
         return TripParticipantListSerializer 
 
     def perform_create(self, serializer):
-        trip = serializer.validated_data.get('trip')
-        role = serializer.validated_data.get('role')
-
-        if TripParticipant.objects.filter(user=self.context['request'].user, trip=trip).exists():
-            raise serializer.ValidationError('El usuario ya pertenece a dicho viaje')
-        if role == 'driver' and TripParticipant.objects.filter(trip=trip, role='driver').exists():
-            raise serializer.ValidationError('Ya existe un conductor asignado para este viaje')
-        serializer.save(user=self.request.user)
+        raise PermissionDenied("No puedes crear un participante, solo puedes unirte a un viaje a través de una solicitud.")
+        #trip = serializer.validated_data.get('trip')
+        #role = serializer.validated_data.get('role')
+#
+        #if TripParticipant.objects.filter(user=self.context['request'].user, trip=trip).exists():
+        #    raise serializer.ValidationError('El usuario ya pertenece a dicho viaje')
+        #if role == 'driver' and TripParticipant.objects.filter(trip=trip, role='driver').exists():
+        #    raise serializer.ValidationError('Ya existe un conductor asignado para este viaje')
+        #serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
         raise PermissionDenied("No puedes actualizar un participante, solo puedes crear o eliminar.")
@@ -168,4 +170,17 @@ class TripViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         trip = serializer.save(creator=self.request.user)
         TripParticipant.objects.create(trip=trip, user=self.request.user, role='driver')
-        
+
+
+class TripJoinRequestViewSet(viewsets.ModelViewSet):
+    queryset = TripJoinRequest.objects.all()
+    serializer_class = TripJoinRequestSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        trip_id = self.kwargs.get('trip_pk')
+        if trip_id:
+            return TripJoinRequest.objects.filter(trip__creator=user, trip=trip_id)
+        return TripJoinRequest.objects.filter(trip__creator=user)  
+     
