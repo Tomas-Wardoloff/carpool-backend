@@ -11,3 +11,6 @@ media/
 *.pyc
 **/__pycache__/
 db.sqlite3
+
+# VScode config
+.vscode/
