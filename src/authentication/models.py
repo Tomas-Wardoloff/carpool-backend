@@ -56,17 +56,6 @@ class CustomUser(AbstractUser):
     def __str__(self) -> str:
         return self.email
     
-    def clean(self):
-        super().clean()
-        
-        #if len(self.document_number) != 8 or int(self.document_number) <= 0 or not self.document_number.isdigit():
-        #    raise ValidationError('Número de documento inválido.')
-        
-        #if self.birth_date.year - datetime.today.year < 18:
-        #    raise ValidationError('Los usuarios deben ser mayores de 18 años.')
-        #if self.birth_date.year - datetime.today.year > 100:
-        #    raise ValidationError('Fecha de nacimiento inválida.')
-    
     def save(self, *args, **kwargs):
         self.first_name = self.first_name.capitalize()
         self.last_name = self.last_name.capitalize()
@@ -77,7 +66,7 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
     
     def get_user_rating(self) -> float | str:
-        reviews = self.review.all()
+        reviews = self.reviews.all()
         if len(reviews) > 20:
             return round(sum([review.rating for review in reviews]) / len(reviews), 1)
         return 'Este usuario no tiene suficientes calificaciones'

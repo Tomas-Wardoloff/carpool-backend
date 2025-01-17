@@ -35,6 +35,16 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
         file_size = value.size
         if file_size > 5*1024*1024:
             raise serializers.ValidationError('La imagen no puede superar los 2MB')
+    
+    def validate_document_number(self, value):
+        if len(value) != 8 or int(value) <= 0 or not value.isdigit():
+            raise serializers.ValidationError('Número de documento inválido.')
+        
+    def validate_birth_date(self, value):        
+        if value.year - datetime.today.year < 18: # CHECK VALUE.YEAR
+            raise serializers.ValidationError('Los usuarios deben ser mayores de 18 años.')
+        if value.year - datetime.today.year > 100:
+            raise serializers.ValidationError('Fecha de nacimiento inválida.')
         
     def create(self, validated_data):
         password = validated_data.pop('password')
