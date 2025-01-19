@@ -24,6 +24,17 @@ class State(models.Model):
     
     def __str__(self):
         return f"{self.name}, {self.country}"
+    
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        self.country = self.country.title()
+        self.abbreviation = self.abbreviation.upper()
+        
+        self.full_clean()
+        super().save(*args, **kwargs)
+        
+    class Meta:
+        unique_together = ('name', 'abbreviation', 'country')
 
 
 class City(models.Model):
