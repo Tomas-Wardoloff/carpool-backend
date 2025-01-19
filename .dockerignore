@@ -14,3 +14,13 @@ venv/
 docs/
 README.md
 LICENSE
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Python
+*.log
+__pycache__/
+*.pyc
+*.pyo
