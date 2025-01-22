@@ -9,6 +9,7 @@ django-cors-headers==4.6.0
 django-environ==0.11.2
 django-phonenumber-field==8.0.0
 djangorestframework==3.15.2
+djangorestframework-camel-case==1.4.2
 djangorestframework-simplejwt==5.3.1
 idna==3.10
 phonenumberslite==8.13.49
