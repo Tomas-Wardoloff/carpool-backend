@@ -16,7 +16,11 @@ class State(models.Model):
         - id (AutoField): The primary key for the state.
         
     Methods:
+        - save: Capitalizes the name and country of the state before saving it.
         - __str__: Returns a string representation of the state.
+    
+    Meta:
+        - unique_together: The name, abbreviation and country of the state must be unique together.
     """
     name = models.CharField(max_length=100, verbose_name="Nombre")
     abbreviation = models.CharField(max_length=2, verbose_name="Abreviatura")
@@ -51,6 +55,7 @@ class City(models.Model):
         - id (AutoField): The primary key for the city.
     
     Methods:
+        - save: Capitalizes the name of the city before saving it.
         - __str__: Returns a string representation of the city.
     """
     name = models.CharField(max_length=100, verbose_name='Nombre')
@@ -58,8 +63,13 @@ class City(models.Model):
     longitude = models.FloatField(verbose_name='Longitud')
     state = models.ForeignKey(State, related_name='cities', on_delete=models.CASCADE, verbose_name='Provincia')
     
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.name}, {self.state}"
+        return f"{self.name}, {self.state}"    
 
 
 class Vehicle(models.Model):
@@ -184,3 +194,4 @@ class TripJoinRequest(models.Model):
     
     class Meta:
         unique_together = ('user', 'trip')
+        
